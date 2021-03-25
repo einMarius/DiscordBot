@@ -18,7 +18,7 @@ public class ZitateCommand implements ServerCommand {
     private int amount = 1;
     private boolean Zitateisrunning;
 
-    private Map<String, Long> cooldown = new HashedMap<>();
+    private Map<Member, Long> cooldown = new HashedMap<>();
 
     @Override
     public void performCommand(Member m, TextChannel channel, Message message) {
@@ -56,8 +56,8 @@ public class ZitateCommand implements ServerCommand {
                                 for (int i = 2; i < args.length; i++)
                                     zitat = String.valueOf(zitat) + " " + args[i];
 
-                                if(cooldown.containsKey(m.getUser().getName())) {
-                                    if (cooldown.get(m.getUser().getName()) > System.currentTimeMillis()) {
+                                if(cooldown.containsKey(m)) {
+                                    if (cooldown.get(m) > System.currentTimeMillis()) {
                                         System.out.println(m.getUser().getName() + " hat den Zitate-Befehl ausgeführt, obwohl der Cooldown für ihn noch aktiviert ist");
 
                                         EmbedBuilder info = new EmbedBuilder();
@@ -69,10 +69,9 @@ public class ZitateCommand implements ServerCommand {
                                         channel.sendMessage(info.build()).queue();
                                         info.clear();
 
+                                        Zitateisrunning = false;
                                     }
                                 } else {
-
-                                    cooldown.put(m.getUser().getName(), System.currentTimeMillis() + (10 * 60 * 1000));
 
                                     EmbedBuilder info = new EmbedBuilder();
                                     info.setTitle("Zitat");
@@ -85,9 +84,11 @@ public class ZitateCommand implements ServerCommand {
 
                                     //MySQL
                                     if(!Main.plugin.getMySQL().userIsExisting(m.getUser().getId())) {
-                                        Main.plugin.getMySQL().createNewPlayer(m.getUser().getId(), m.getUser().getName(), 1);
+                                        Main.plugin.getMySQL().createNewPlayer(m.getUser().getId(), m.getUser().getName(), 5);
+                                        cooldown.put(m, System.currentTimeMillis() + (10 * 60 * 1000));
                                     } else {
-                                        Main.plugin.getMySQL().updatePlayer(m.getUser().getId(), m.getUser().getName(), 1);
+                                        Main.plugin.getMySQL().updatePlayer(m.getUser().getId(), m.getUser().getName(), 5);
+                                        cooldown.put(m, System.currentTimeMillis() + (10 * 60 * 1000));
                                     }
 
                                     Zitateisrunning = false;

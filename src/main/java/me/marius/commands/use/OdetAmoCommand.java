@@ -17,7 +17,7 @@ public class OdetAmoCommand implements ServerCommand {
     private int amount = 1;
     private boolean OdetAmoisrunning;
 
-    private Map<String, Long> cooldown = new HashedMap<>();
+    private Map<Member, Long> cooldown = new HashedMap<>();
 
     @Override
     public void performCommand(Member m, TextChannel channel, Message message) {
@@ -50,8 +50,8 @@ public class OdetAmoCommand implements ServerCommand {
                                     System.out.println("[BaumbalabungaBot] Thread was interrupted, Failed to complete operation");
                                 }
 
-                                if(cooldown.containsKey(m.getUser().getName())) {
-                                    if (cooldown.get(m.getUser().getName()) > System.currentTimeMillis()) {
+                                if(cooldown.containsKey(m)) {
+                                    if (cooldown.get(m) > System.currentTimeMillis()) {
                                         System.out.println(m.getUser().getName() + " hat den OdetAmo-Befehl ausgeführt, obwohl der Cooldown für ihn noch aktiviert ist");
 
                                         EmbedBuilder info = new EmbedBuilder();
@@ -64,10 +64,9 @@ public class OdetAmoCommand implements ServerCommand {
                                         channel.sendMessage(info.build()).queue();
                                         info.clear();
 
+                                        OdetAmoisrunning = false;
                                     }
                                 } else {
-
-                                    cooldown.put(m.getUser().getName(), System.currentTimeMillis() + (10 * 60 * 1000));
 
                                     EmbedBuilder info = new EmbedBuilder();
                                     info.setTitle(" **LATEIN** ");
@@ -82,8 +81,10 @@ public class OdetAmoCommand implements ServerCommand {
                                     //MySQL
                                     if(!Main.plugin.getMySQL().userIsExisting(m.getUser().getId())) {
                                         Main.plugin.getMySQL().createNewPlayer(m.getUser().getId(), m.getUser().getName(), 1);
+                                        cooldown.put(m, System.currentTimeMillis() + (10 * 60 * 1000));
                                     } else {
                                         Main.plugin.getMySQL().updatePlayer(m.getUser().getId(), m.getUser().getName(), 1);
+                                        cooldown.put(m, System.currentTimeMillis() + (10 * 60 * 1000));
                                     }
 
                                     OdetAmoisrunning = false;

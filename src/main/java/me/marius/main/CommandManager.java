@@ -31,6 +31,9 @@ public class CommandManager {
         this.commands.put("boost", new PlayCommand());
         this.commands.put("top", new TopCommand());
         this.commands.put("stats", new StatsCommand());
+        this.commands.put("aelia", new AeliaCommand());
+        this.commands.put("phoebe", new PhoebeCommand());
+        this.commands.put("sexte", new SexteCommand());
 
     }
 

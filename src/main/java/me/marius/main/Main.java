@@ -1,9 +1,6 @@
 package me.marius.main;
 
-import me.marius.listeners.CommandListener;
-import me.marius.listeners.GuildMemberJoin;
-import me.marius.listeners.GuildMemberLeave;
-import me.marius.listeners.ReactionListener;
+import me.marius.listeners.*;
 import me.marius.music.PlayerManager;
 import me.marius.mysql.MySQL;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -70,6 +67,7 @@ public class Main {
         builder.addEventListeners(new ReactionListener());
         builder.addEventListeners(new GuildMemberJoin());
         builder.addEventListeners(new GuildMemberLeave());
+        builder.addEventListeners(new SendMessage());
         //builder.addEventListeners(new BlackListListener());
         // --------------REGISTER---------------
 

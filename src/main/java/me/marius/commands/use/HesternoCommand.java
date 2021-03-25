@@ -65,10 +65,9 @@ public class HesternoCommand implements ServerCommand {
                                         channel.sendMessage(info.build()).queue();
                                         info.clear();
 
+                                        Hesternoisrunning = false;
                                     }
                                 } else {
-
-                                    cooldown.put(m.getUser().getName(), System.currentTimeMillis() + (10 * 60 * 1000));
 
                                     EmbedBuilder info = new EmbedBuilder();
                                     info.setTitle(" **LATEIN** ");
@@ -84,8 +83,10 @@ public class HesternoCommand implements ServerCommand {
                                     //MySQL
                                     if(!Main.plugin.getMySQL().userIsExisting(m.getUser().getId())) {
                                         Main.plugin.getMySQL().createNewPlayer(m.getUser().getId(), m.getUser().getName(), 1);
+                                        cooldown.put(m.getUser().getName(), System.currentTimeMillis() + (10 * 60 * 1000));
                                     } else {
                                         Main.plugin.getMySQL().updatePlayer(m.getUser().getId(), m.getUser().getName(), 1);
+                                        cooldown.put(m.getUser().getName(), System.currentTimeMillis() + (10 * 60 * 1000));
                                     }
 
                                     Hesternoisrunning = false;

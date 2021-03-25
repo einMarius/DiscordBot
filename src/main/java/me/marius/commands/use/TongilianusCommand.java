@@ -17,7 +17,7 @@ public class TongilianusCommand implements ServerCommand {
     private int amount = 1;
     private boolean Tongilianusisrunning;
 
-    private Map<String, Long> cooldown = new HashedMap<>();
+    private Map<Member, Long> cooldown = new HashedMap<>();
 
     @Override
     public void performCommand(Member m, TextChannel channel, Message message) {
@@ -50,13 +50,13 @@ public class TongilianusCommand implements ServerCommand {
                                     System.out.println("[BaumbalabungaBot] Thread was interrupted, Failed to complete operation");
                                 }
 
-                                if(cooldown.containsKey(m.getUser().getName())) {
-                                    if (cooldown.get(m.getUser().getName()) > System.currentTimeMillis()) {
+                                if(cooldown.containsKey(m)) {
+                                    if (cooldown.get(m) > System.currentTimeMillis()) {
                                         System.out.println(m.getUser().getName() + " hat den Tongilianus-Befehl ausgeführt, obwohl der Cooldown für ihn noch aktiviert ist");
 
                                         EmbedBuilder info = new EmbedBuilder();
                                         info.setTitle(" **LATEIN** ");
-                                        info.setDescription("**Tongilianus** habet nasum: scio, non nego. Sed iam \\nnil praeter nasum Tongilianus habet.");
+                                        info.setDescription("**Tongilianus** habet nasum: scio, non nego. Sed iam \nnil praeter nasum Tongilianus habet.");
                                         info.setFooter(m.getUser().getName() + " wollte den puren Latein-Genuss",
                                                 m.getUser().getAvatarUrl());
                                         info.setColor(0xe3be7f);
@@ -64,14 +64,12 @@ public class TongilianusCommand implements ServerCommand {
                                         channel.sendMessage(info.build()).queue();
                                         info.clear();
 
+                                        Tongilianusisrunning = false;
                                     }
                                 } else {
-
-                                    cooldown.put(m.getUser().getName(), System.currentTimeMillis() + (10 * 60 * 1000));
-
                                     EmbedBuilder info = new EmbedBuilder();
                                     info.setTitle(" **LATEIN** ");
-                                    info.setDescription("**Tongilianus** habet nasum: scio, non nego. Sed iam \\nnil praeter nasum Tongilianus habet.");
+                                    info.setDescription("**Tongilianus** habet nasum: scio, non nego. Sed iam \nnil praeter nasum Tongilianus habet.");
                                     info.setFooter(m.getUser().getName() + " wollte den puren Latein-Genuss",
                                             m.getUser().getAvatarUrl());
                                     info.setColor(0xe3be7f);
@@ -82,8 +80,10 @@ public class TongilianusCommand implements ServerCommand {
                                     //MySQL
                                     if(!Main.plugin.getMySQL().userIsExisting(m.getUser().getId())) {
                                         Main.plugin.getMySQL().createNewPlayer(m.getUser().getId(), m.getUser().getName(), 1);
+                                        cooldown.put(m, System.currentTimeMillis() + (10 * 60 * 1000));
                                     } else {
                                         Main.plugin.getMySQL().updatePlayer(m.getUser().getId(), m.getUser().getName(), 1);
+                                        cooldown.put(m, System.currentTimeMillis() + (10 * 60 * 1000));
                                     }
 
                                     Tongilianusisrunning = false;
