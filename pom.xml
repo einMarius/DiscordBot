@@ -34,9 +34,21 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.taycaldwell</groupId>
+            <artifactId>riot-api-java</artifactId>
+            <version>4.2.0</version>
+        </dependency>
+
     </dependencies>
 
     <repositories>
+
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+
         <repository>
             <id>jcenter</id>
             <name>jcenter-bintray</name>

@@ -1,13 +1,10 @@
 package me.marius.mysql;
 
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.internal.entities.UserById;
 
-import java.nio.channels.Channel;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class MySQL {
 
@@ -21,6 +18,7 @@ public class MySQL {
     private boolean isRunningCreateNewPlayer;
     private boolean isRunningUpdatePlayer;
     private boolean isRunningGetPoints;
+    private boolean isRunningGetRank;
 
     public HashMap<Integer, String> ranking = new HashMap<>();
 
@@ -180,4 +178,25 @@ public class MySQL {
 
         return ranking;
     }
+
+    public int getRank(String UserID){
+        if (!isConnected())
+            if (!connect())
+                return 0;
+
+            try {
+                PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) From ranking WHERE Punkte >= (SELECT Punkte FROM ranking WHERE UserID = ?)");
+                ps.setString(1, UserID);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    return rs.getInt("COUNT(*)");
+                }
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        return 0;
+    }
+
+
 }

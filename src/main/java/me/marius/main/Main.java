@@ -29,7 +29,7 @@ public class Main {
 
     public static Main plugin;
     public static ShardManager shardManager;
-    public static String token = "ODExOTg1MTE1MzA2NjU1Nzc0.YC6KEQ.X-MFbLioGTLfgxIaiqLMNXdEa_Q";
+    public static String token = "ODExOTg1MTE1MzA2NjU1Nzc0.YC6KEQ.B4e5hIId6F0sP2MdRO-kRrl_2kU";
     public static AudioPlayerManager audioplayermanager;
 
     private PlayerManager playerManager;

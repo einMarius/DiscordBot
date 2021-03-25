@@ -30,6 +30,7 @@ public class CommandManager {
         this.commands.put("addroles", new AddRolesCommand());
         this.commands.put("boost", new PlayCommand());
         this.commands.put("top", new TopCommand());
+        this.commands.put("stats", new StatsCommand());
 
     }
 
