@@ -1,7 +1,5 @@
 package me.marius.mysql;
 
-import net.dv8tion.jda.api.entities.TextChannel;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,8 +15,7 @@ public class MySQL {
 
     private boolean isRunningCreateNewPlayer;
     private boolean isRunningUpdatePlayer;
-    private boolean isRunningGetPoints;
-    private boolean isRunningGetRank;
+    private boolean isRunningSetChannelTime;
 
     public HashMap<Integer, String> ranking = new HashMap<>();
 
@@ -71,14 +68,14 @@ public class MySQL {
 
         PreparedStatement ps = null;
         try {
-            ps = con.prepareStatement("CREATE TABLE IF NOT EXISTS Ranking (UserID VARCHAR(100), Username VARCHAR(100), Punkte INT)");
+            ps = con.prepareStatement("CREATE TABLE IF NOT EXISTS Ranking (UserID VARCHAR(100), Username VARCHAR(100), Punkte INT, Nachrichten INT, Reaktionen INT, ChannelTime TIMESTAMP)");
             ps.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
-    public void createNewPlayer(String userID, String userName, int punkte){
+    public void createNewPlayer(String userID, String userName, int punkte, int messages, int reactions, int channeltime){
 
         isRunningCreateNewPlayer = !isRunningCreateNewPlayer;
 
@@ -95,10 +92,13 @@ public class MySQL {
                         return;
 
                 try {
-                    PreparedStatement ps = con.prepareStatement("INSERT INTO ranking (UserID,Username,Punkte) VALUES (?,?,?)");
+                    PreparedStatement ps = con.prepareStatement("INSERT INTO ranking (UserID,Username,Punkte,Nachrichten,Reaktionen,ChannelTime) VALUES (?,?,?,?,?,?)");
                     ps.setString(1, userID);
                     ps.setString(2, userName);
                     ps.setInt(3, punkte);
+                    ps.setInt(4, messages);
+                    ps.setInt(5, reactions);
+                    ps.setInt(6, 0);
                     ps.executeUpdate();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
@@ -109,7 +109,7 @@ public class MySQL {
         }).start();
     }
 
-    public void updatePlayer(String userID, String username, int punkte){
+    public void setPunkte(String userID, String username, int punkte, int nachrichten, int reaktionen){
 
         isRunningUpdatePlayer = !isRunningUpdatePlayer;
 
@@ -126,15 +126,13 @@ public class MySQL {
                         return;
 
                 try {
-                    PreparedStatement ps = con.prepareStatement("UPDATE ranking SET Punkte = ? WHERE UserID = ?");
-                    ps.setInt(1, getPoints(userID)+punkte);
-                    ps.setString(2, userID);
+                    PreparedStatement ps = con.prepareStatement("UPDATE ranking SET Username = ?, Punkte = ?, Nachrichten = ?, Reaktionen = ? WHERE UserID = ?");
+                    ps.setString(1, username);
+                    ps.setInt(2, getPunkte(userID)+punkte);
+                    ps.setInt(3, getNachrichten(userID)+nachrichten);
+                    ps.setInt(4, getReaktionen(userID)+reaktionen);
+                    ps.setString(5, userID);
                     ps.executeUpdate();
-
-                    PreparedStatement ps1 = con.prepareStatement("UPDATE ranking SET Username = ? WHERE UserID = ?");
-                    ps1.setString(1, username);
-                    ps1.setString(2, userID);
-                    ps1.executeUpdate();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
@@ -144,7 +142,77 @@ public class MySQL {
         }).start();
     }
 
-    public int getPoints(String userID){
+    public void setChannelTime(String userID, String username, int channeltime){
+
+        isRunningSetChannelTime = !isRunningSetChannelTime;
+        new Thread(() -> {
+            while(isRunningSetChannelTime){
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if(!isConnected())
+                    if(!userIsExisting(userID))
+                        return;
+
+                try {
+                    PreparedStatement ps = con.prepareStatement("UPDATE ranking SET ChannelTime = ? WHERE UserID = ?");
+                    ps.setInt(1, getChannelTime(userID)+channeltime);
+                    ps.setString(2, userID);
+
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+
+            }
+        }).start();
+
+    }
+
+    public int getChannelTime(String userID){
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT ChannelTime FROM ranking WHERE UserID = ?");
+            ps.setString(1, userID);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+                return rs.getInt("ChannelTime");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int getReaktionen(String userID){
+        try{
+            PreparedStatement ps = con.prepareStatement("SELECT Reaktionen FROM ranking WHERE UserID = ?");
+            ps.setString(1, userID);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                return rs.getInt("Reaktionen");
+            }
+        } catch (SQLException throwables){
+            throwables.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int getNachrichten(String userID){
+        try{
+            PreparedStatement ps = con.prepareStatement("SELECT Nachrichten FROM ranking WHERE UserID = ?");
+            ps.setString(1, userID);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                return rs.getInt("Nachrichten");
+            }
+        } catch (SQLException throwables){
+            throwables.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int getPunkte(String userID){
 
         try {
             PreparedStatement ps = con.prepareStatement("SELECT Punkte FROM ranking WHERE UserID = ?");
@@ -155,7 +223,7 @@ public class MySQL {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return -1;
+        return 0;
     }
 
     public ArrayList<String> getRanking(){
@@ -197,6 +265,4 @@ public class MySQL {
             }
         return 0;
     }
-
-
 }

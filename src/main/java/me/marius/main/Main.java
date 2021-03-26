@@ -11,9 +11,6 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Random;
 
 import javax.security.auth.login.LoginException;
@@ -67,7 +64,10 @@ public class Main {
         builder.addEventListeners(new ReactionListener());
         builder.addEventListeners(new GuildMemberJoin());
         builder.addEventListeners(new GuildMemberLeave());
-        builder.addEventListeners(new SendMessage());
+        builder.addEventListeners(new SendMessageListener());
+        builder.addEventListeners(new ReactionsListener());
+        //builder.addEventListeners(new ChannelJoinEvent());
+        //builder.addEventListeners(new ChannelLeaveEvent());
         //builder.addEventListeners(new BlackListListener());
         // --------------REGISTER---------------
 

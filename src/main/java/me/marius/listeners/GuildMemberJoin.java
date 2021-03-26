@@ -34,5 +34,7 @@ public class GuildMemberJoin extends ListenerAdapter {
 
         e.getGuild().getDefaultChannel().sendMessage(builder.build()).queue();
 
+        e.getMember().getGuild().addRoleToMember(e.getMember(), e.getJDA().getRoleById("824983261197500440")).queue();
+
     }
 }

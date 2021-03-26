@@ -80,10 +80,10 @@ public class OdetAmoCommand implements ServerCommand {
 
                                     //MySQL
                                     if(!Main.plugin.getMySQL().userIsExisting(m.getUser().getId())) {
-                                        Main.plugin.getMySQL().createNewPlayer(m.getUser().getId(), m.getUser().getName(), 1);
+                                        Main.plugin.getMySQL().createNewPlayer(m.getUser().getId(), m.getUser().getName(), 1, 0, 0, 0);
                                         cooldown.put(m, System.currentTimeMillis() + (10 * 60 * 1000));
                                     } else {
-                                        Main.plugin.getMySQL().updatePlayer(m.getUser().getId(), m.getUser().getName(), 1);
+                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0);
                                         cooldown.put(m, System.currentTimeMillis() + (10 * 60 * 1000));
                                     }
 

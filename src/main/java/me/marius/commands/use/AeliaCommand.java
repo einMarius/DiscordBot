@@ -4,6 +4,7 @@ import me.marius.commands.types.ServerCommand;
 import me.marius.main.Main;
 import me.marius.main.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -72,10 +73,11 @@ public class AeliaCommand implements ServerCommand {
 
                             //MySQL
                             if(!Main.plugin.getMySQL().userIsExisting(m.getUser().getId())) {
-                                Main.plugin.getMySQL().createNewPlayer(m.getUser().getId(), m.getUser().getName(), 1);
+                                Main.plugin.getMySQL().createNewPlayer(m.getUser().getId(), m.getUser().getName(), 1, 0, 0, 0);
                                 cooldown.put(m, System.currentTimeMillis() + (10 * 60 * 1000));
+
                             } else {
-                                Main.plugin.getMySQL().updatePlayer(m.getUser().getId(), m.getUser().getName(), 1);
+                                Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0);
                                 cooldown.put(m, System.currentTimeMillis() + (10 * 60 * 1000));
                             }
 

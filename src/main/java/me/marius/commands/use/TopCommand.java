@@ -7,10 +7,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import org.apache.commons.collections4.map.HashedMap;
 
 import java.awt.*;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class TopCommand implements ServerCommand {
@@ -49,7 +47,7 @@ public class TopCommand implements ServerCommand {
                             for(int i = 0; i < Main.plugin.getMySQL().getRanking().size(); i++){
                                 int place = i + 1;
                                 builder.addField(">>> Platz " + place, Main.shardManager.getUserById(Main.plugin.getMySQL().getRanking().get(i)).getName() + " mit "
-                                        + Main.plugin.getMySQL().getPoints(Main.plugin.getMySQL().getRanking().get(i)) + " Punkten", false);
+                                        + Main.plugin.getMySQL().getPunkte(Main.plugin.getMySQL().getRanking().get(i)) + " Punkten", false);
                             }
                             builder.setThumbnail(m.getGuild().getIconUrl());
                             builder.setFooter("Bot created by Marius", m.getGuild().getIconUrl());
