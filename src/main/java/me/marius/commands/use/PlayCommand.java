@@ -8,6 +8,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 
 import me.marius.commands.types.ServerCommand;
+import me.marius.main.LevelRoles;
 import me.marius.main.Main;
 import me.marius.main.Utils;
 import me.marius.music.AudioLoadResult;
@@ -68,7 +69,7 @@ public class PlayCommand implements ServerCommand {
                                         for (int i = 1; i < args.length; i++)
                                             strBuilder.append(args[i] + " ");
 
-                                        String url = "https://www.youtube.com/watch?v=sDwmitvFBvg&ab_channel=TheVibeGuide";
+                                        String url = "https://www.youtube.com/watch?v=_z-1fTlSDF0&ab_channel=infobells";
 
                                         apm.loadItem(url, new AudioLoadResult(controller, url));
                                         controllerlist.add(controller);
@@ -76,7 +77,7 @@ public class PlayCommand implements ServerCommand {
                                         EmbedBuilder builder = new EmbedBuilder();
                                         builder.setTitle("⚠ **MAXIMALER BOOOOOST** ⚠");
                                         builder.setDescription("**OMG, DER MAXIMAL BOOOOOOOST GEHT LOOOOOOOOOOOS**");
-                                        builder.addField(">>> Now playing", "`VIZE x Tokio Hotel - White Lies` ",
+                                        builder.addField(">>> Now playing", "`Happy Birthday song` ",
                                                 false);
                                         builder.setThumbnail(m.getGuild().getIconUrl());
                                         builder.setFooter("Bot created by Marius", m.getGuild().getIconUrl());
@@ -91,8 +92,29 @@ public class PlayCommand implements ServerCommand {
                                 //MySQL
                                 if(!Main.plugin.getMySQL().userIsExisting(m.getUser().getId())) {
                                     Main.plugin.getMySQL().createNewPlayer(m.getUser().getId(), m.getUser().getName(), 3, 0, 0, 0);
+                                    m.getGuild().addRoleToMember(m.getId(), m.getJDA().getRoleById("824983261197500440")).queue();
                                 } else {
-                                    Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0);
+                                    //RANK 5
+                                    if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 10000){
+                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0);
+                                        //RANK 4
+                                    } else if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 1000){
+                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0);
+                                        //RANK 3
+                                    } else if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 500){
+                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0);
+                                        //RANK 2
+                                    } else if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 100){
+                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0);
+                                        //RANK 1
+                                    } else if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 50){
+                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0);
+                                        //UNRANKED
+                                    } else if(Main.plugin.getMySQL().getPunkte(m.getId()) < 50) {
+                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0);
+                                    }
+
+                                    LevelRoles.addRoles(m);
                                 }
 
                             } else {

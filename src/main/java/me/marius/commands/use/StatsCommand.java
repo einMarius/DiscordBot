@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.*;
-import java.sql.Time;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -29,11 +28,7 @@ public class StatsCommand implements ServerCommand {
 
         String args[] = message.getContentRaw().split(" ");
 
-        if (!channel.getName().equalsIgnoreCase("umfragen") && !channel.getName().equalsIgnoreCase("news")
-                && !channel.getName().equalsIgnoreCase("memes-und-mehr")
-                && !channel.getName().equalsIgnoreCase("ls-mods") && !channel.getName().equalsIgnoreCase("musik")
-                && !channel.getName().equalsIgnoreCase("zitate")
-                && !channel.getName().equalsIgnoreCase("schulchat")) {
+        if (channel.getId().equalsIgnoreCase("825103970270707743")) {
             if(args.length == 1){
 
                 channel.purgeMessages(Utils.get(channel, amount));

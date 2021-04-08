@@ -38,7 +38,7 @@ public class CreateTeamsCommand implements ServerCommand {
                     && !channel.getName().equalsIgnoreCase("memes-und-mehr")
                     && !channel.getName().equalsIgnoreCase("ls-mods") && !channel.getName().equalsIgnoreCase("musik")
                     && !channel.getName().equalsIgnoreCase("zitate")
-                    && !channel.getName().equalsIgnoreCase("schulchat")) {
+                    && !channel.getName().equalsIgnoreCase("schulchat") && !channel.getName().equalsIgnoreCase("stats")) {
 
                 if (args.length == 9) {
 

@@ -28,7 +28,7 @@ public class ThaisCommand implements ServerCommand {
         if (!channel.getName().equalsIgnoreCase("umfragen") && !channel.getName().equalsIgnoreCase("news")
                 && !channel.getName().equalsIgnoreCase("memes-und-mehr")
                 && !channel.getName().equalsIgnoreCase("ls-mods") && !channel.getName().equalsIgnoreCase("musik")
-                && !channel.getName().equalsIgnoreCase("zitate")) {
+                && !channel.getName().equalsIgnoreCase("zitate") && !channel.getName().equalsIgnoreCase("stats")) {
 
             if(args.length == 1) {
 
@@ -85,11 +85,30 @@ public class ThaisCommand implements ServerCommand {
                                     //MySQL
                                     if(!Main.plugin.getMySQL().userIsExisting(m.getUser().getId())) {
                                         Main.plugin.getMySQL().createNewPlayer(m.getUser().getId(), m.getUser().getName(), 1, 0, 0, 0);
+                                        m.getGuild().addRoleToMember(m.getId(), m.getJDA().getRoleById("824983261197500440")).queue();
                                         cooldown.put(m, System.currentTimeMillis() + (10 * 60 * 1000));
                                     } else {
-                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0);
+                                        //RANK 5
+                                        if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 10000){
+                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0);
+                                        //RANK 4
+                                        } else if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 1000){
+                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0);
+                                        //RANK 3
+                                        } else if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 500){
+                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0);
+                                        //RANK 2
+                                        } else if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 100){
+                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0);
+                                        //RANK 1
+                                        } else if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 50){
+                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0);
+                                        //UNRANKED
+                                        } else if(Main.plugin.getMySQL().getPunkte(m.getId()) < 50) {
+                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0);
+                                        }
+
                                         cooldown.put(m, System.currentTimeMillis() + (10 * 60 * 1000));
-                                        System.out.println("Debug 1");
                                         LevelRoles.addRoles(m);
                                     }
 

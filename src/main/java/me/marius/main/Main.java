@@ -23,7 +23,7 @@ public class Main {
 
     public static Main plugin;
     public static ShardManager shardManager;
-    public static String token = "ODExOTg1MTE1MzA2NjU1Nzc0.YC6KEQ.B4e5hIId6F0sP2MdRO-kRrl_2kU";
+    public static String token = "ODExOTg1MTE1MzA2NjU1Nzc0.YC6KEQ.wJXWypsmirnIqlkT3DUrouA3WrA";
     public static AudioPlayerManager audioplayermanager;
 
     private PlayerManager playerManager;
@@ -162,6 +162,5 @@ public class Main {
     public PlayerManager getPlayerManager() { return playerManager; }
     public MySQL getMySQL() { return mySQL; }
     public Main getPlugin(){ return  this; }
-
 
 }

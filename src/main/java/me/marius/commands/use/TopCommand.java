@@ -21,10 +21,7 @@ public class TopCommand implements ServerCommand {
 
         String args[] = message.getContentDisplay().split(" ");
 
-        if (!channel.getName().equalsIgnoreCase("umfragen") && !channel.getName().equalsIgnoreCase("news")
-                && !channel.getName().equalsIgnoreCase("memes-und-mehr")
-                && !channel.getName().equalsIgnoreCase("ls-mods") && !channel.getName().equalsIgnoreCase("musik")
-                && !channel.getName().equalsIgnoreCase("zitate")) {
+        if (channel.getId().equalsIgnoreCase("825103970270707743")) {
 
             if (args.length == 1) {
                 channel.purgeMessages(Utils.get(channel, amount));
