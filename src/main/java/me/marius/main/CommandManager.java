@@ -36,6 +36,9 @@ public class CommandManager {
         this.commands.put("troll", new TrollCommand());
         this.commands.put("valstats", new ValStatsCommand());
         this.commands.put("plsmeme", new MemeCommand());
+        this.commands.put("wartungen", new WartungenCommand());
+        this.commands.put("pp", new PPCommand());
+        this.commands.put("gay", new GayCommand());
 
     }
 

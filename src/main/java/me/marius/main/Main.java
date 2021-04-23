@@ -41,7 +41,7 @@ public class Main {
         }
 
         plugin.mySQL.connect();
-        plugin.mySQL.createTable();
+        plugin.mySQL.createTables();
     }
 
     @SuppressWarnings("deprecation")

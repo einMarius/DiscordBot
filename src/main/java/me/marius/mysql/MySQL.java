@@ -17,13 +17,11 @@ public class MySQL {
     private boolean isRunningUpdatePlayer;
     private boolean isRunningSetChannelTime;
 
-    public HashMap<Integer, String> ranking = new HashMap<>();
-
     public boolean connect() {
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database,username,password);
+            con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database + "?allowMultiQueries=true",username,password);
             System.out.println("[BaumbalabungaBot] Die Verbindung zur MySQL-Datenbank wurde hergestellt!");
             return true;
         } catch (SQLException | ClassNotFoundException e) {
@@ -62,14 +60,20 @@ public class MySQL {
         return false;
     }
 
-    public void createTable(){
+    public void createTables(){
         if(!isConnected())
             return;
 
-        PreparedStatement ps = null;
         try {
-            ps = con.prepareStatement("CREATE TABLE IF NOT EXISTS Ranking (UserID VARCHAR(100), Username VARCHAR(100), Punkte INT, Nachrichten INT, Reaktionen INT, ChannelTime TIMESTAMP)");
+            PreparedStatement ps = con.prepareStatement("CREATE TABLE IF NOT EXISTS Ranking (UserID VARCHAR(100), Username VARCHAR(100), Punkte INT, Nachrichten INT, Reaktionen INT, ChannelTime TIMESTAMP); CREATE TABLE IF NOT EXISTS Wartungen (WartungBoolean BOOLEAN NOT NULL);");
             ps.executeUpdate();
+
+            PreparedStatement ps1 = con.prepareStatement("SELECT EXISTS (SELECT 1 FROM Wartungen)");
+            ResultSet rs = ps1.executeQuery();
+            while(rs.next()) {
+                PreparedStatement ps2 = con.prepareStatement("INSERT INTO Wartungen (WartungBoolean) VALUES (FALSE)");
+                ps2.executeUpdate();
+            }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -264,5 +268,39 @@ public class MySQL {
                 throwables.printStackTrace();
             }
         return 0;
+    }
+
+    public void setWartungen(){
+        if(!isConnected())
+            if(!connect())
+                return;
+
+        try {
+            PreparedStatement ps = con.prepareStatement("UPDATE Wartungen SET WartungBoolean = ?");
+            ps.setBoolean(1, !getWartungen());
+            ps.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public boolean getWartungen(){
+        if(!isConnected())
+            if(!connect())
+                return false;
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM Wartungen");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+                if(rs.getBoolean("WartungBoolean") == false)
+                    return false;
+                else
+                    return true;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return false;
     }
 }

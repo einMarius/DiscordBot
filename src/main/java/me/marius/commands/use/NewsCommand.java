@@ -10,6 +10,8 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.Color;
 import java.text.SimpleDateFormat;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
@@ -65,8 +67,9 @@ public class NewsCommand implements ServerCommand {
                                     info.addField("Erwähung", "<@&816243134090444812>", false);
                                     info.setDescription(news);
                                     info.setFooter(
-                                            m.getUser().getName() + " hat am " + sdf.format(cal.getTime()) + " eine Neuigkeit gepostet",
+                                            m.getUser().getName() + " hat eine Neuigkeit gepostet",
                                             m.getUser().getAvatarUrl());
+                                    info.setTimestamp(LocalDateTime.now(Clock.systemUTC()));
                                     info.setColor(Color.green);
 
                                     channel.sendMessage("||<@&816243134090444812>|| \n").embed(info.build()).queue();

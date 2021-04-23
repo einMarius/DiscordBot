@@ -2,6 +2,8 @@ package me.marius.commands.use;
 
 import java.awt.Color;
 import java.text.SimpleDateFormat;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
@@ -54,9 +56,6 @@ public class UmfrageCommand implements ServerCommand {
 
                                     String args[] = message.getContentDisplay().split(" ");
 
-                                    Calendar cal = Calendar.getInstance();
-                                    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.YYYY");
-
                                     String umfrage = "";
                                     for (int i = 1; i < args.length; i++)
                                         umfrage = String.valueOf(umfrage) + " " + args[i];
@@ -66,8 +65,8 @@ public class UmfrageCommand implements ServerCommand {
                                     info.setAuthor(m.getNickname());
                                     info.setThumbnail(m.getGuild().getIconUrl());
                                     info.setDescription(umfrage);
-                                    info.setFooter(m.getUser().getName() + " hat am " + sdf.format(cal.getTime())
-                                            + " eine Umfrage gestartet", m.getUser().getAvatarUrl());
+                                    info.setFooter(m.getUser().getName() + " hat eine Umfrage gestartet", m.getUser().getAvatarUrl());
+                                    info.setTimestamp(LocalDateTime.now(Clock.systemUTC()));
                                     info.setColor(Color.CYAN);
 
                                     channel.sendMessage("||<@&816385581738885182>|| \n").embed(info.build())

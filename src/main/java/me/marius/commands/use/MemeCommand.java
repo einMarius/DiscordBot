@@ -65,7 +65,7 @@ public class MemeCommand implements ServerCommand {
                                         for (Object o : array) {
                                             JSONObject jsonObject = (JSONObject) o;
 
-                                            postlink = (String) jsonObject.get("postlink");
+                                            postlink = (String) jsonObject.get("postLink");
                                             title = (String) jsonObject.get("title");
                                             url = (String) jsonObject.get("url");
                                         }
@@ -80,7 +80,6 @@ public class MemeCommand implements ServerCommand {
                                             .setImage(url)
                                             .setColor(Color.decode("0x" + colour));
                                     channel.sendMessage(builder.build()).queue();
-                                    builder.clear();
 
                                 } catch (Exception e) {
                                     channel.sendMessage("Es gab einen Fehler beim laden des Memes!").complete().delete().queueAfter(5, TimeUnit.SECONDS);
@@ -122,7 +121,6 @@ public class MemeCommand implements ServerCommand {
                                         .setImage(url)
                                         .setColor(Color.decode("0x" + colour));
                                 channel.sendMessage(builder.build()).queue();
-                                builder.clear();
 
                             } catch (Exception e) {
                                 channel.sendMessage("Es gab einen Fehler beim laden des Memes!").complete().delete().queueAfter(5, TimeUnit.SECONDS);

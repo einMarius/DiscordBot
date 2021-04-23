@@ -98,12 +98,10 @@ public class StatsCommand implements ServerCommand {
                             builder.addField(">>> Die hinzugefügten Reaktionen", "Reaktionen: `" + Main.plugin.getMySQL().getReaktionen(targett.getUser().getId()) + "`", false);
                             builder.setThumbnail(targett.getUser().getAvatarUrl());
                             builder.setFooter("Bot created by Marius", m.getGuild().getIconUrl());
-
+                            //COLOUR
                             Random rand = new Random();
                             int i = rand.nextInt(colours.length);
-
                             String colour = colours[i];
-
                             builder.setColor(Color.decode("0x" + colour));
 
                             channel.sendMessage(builder.build()).queue();
