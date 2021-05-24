@@ -3,6 +3,7 @@ package me.marius.commands.use;
 import me.marius.commands.types.ServerCommand;
 import me.marius.main.Main;
 import me.marius.main.Utils;
+import me.marius.mysql.MySQL;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -20,7 +21,9 @@ public class StatsCommand implements ServerCommand {
 
     private int amount = 1;
 
-    private boolean isRunningOwnStats;
+    private EmbedBuilder stats = new EmbedBuilder();
+
+    private boolean isRunningStats;
     private boolean isRunningOtherStats;
 
     @Override
@@ -29,94 +32,96 @@ public class StatsCommand implements ServerCommand {
         String args[] = message.getContentRaw().split(" ");
 
         if (channel.getId().equalsIgnoreCase("825103970270707743")) {
-            if(args.length == 1){
-
-                channel.purgeMessages(Utils.get(channel, amount));
+            if(args.length == 1) {
+                message.delete().queue();
                 channel.sendTyping().queue();
-
                 channel.sendMessage("Searching for Stats...").complete().delete().queueAfter(500, TimeUnit.MILLISECONDS);
 
-                isRunningOwnStats = !isRunningOwnStats;
+
+                isRunningStats = !isRunningStats;
                 new Thread(() -> {
-                    while(isRunningOwnStats){
+                    while (isRunningStats) {
+
                         try {
-                            Thread.sleep(150);
+                            Thread.sleep(250);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
 
-                        EmbedBuilder builder = new EmbedBuilder();
-                        builder.setTitle("◽ **Stats von " + m.getUser().getName() + "** ◽");
-                        builder.setDescription("**Hier siehst du die Stats**");
-                        builder.addField(">>> Der Rank", "Rank: `" + Main.plugin.getMySQL().getRank(m.getUser().getId()) + "` ", false);
-                        builder.addField(">>> Die Punkte", "Punkte: `" + Main.plugin.getMySQL().getPunkte(m.getUser().getId()) + "`", false);
-                        builder.addField(">>> Die gesendeten Nachrichten", "Nachrichten: `" + Main.plugin.getMySQL().getNachrichten(m.getId()) + "`", false);
-                        builder.addField(">>> Die hinzugefügten Reaktionen", "Reaktionen: `" + Main.plugin.getMySQL().getReaktionen(m.getId()) + "`", false);
-                        builder.setThumbnail(m.getUser().getAvatarUrl());
-                        builder.setFooter("Bot created by Marius", m.getGuild().getIconUrl());
-
                         Random rand = new Random();
                         int i = rand.nextInt(colours.length);
-
                         String colour = colours[i];
 
-                        builder.setColor(Color.decode("0x" + colour));
+                        stats = new EmbedBuilder()
+                                .setTitle("◽ **Stats von " + m.getUser().getName() + "** ◽")
+                                .setDescription("**Hier siehst du die Stats von " + m.getUser().getName() + "**")
+                                .addField(">>> Der Rank", "Rank: `" + Main.plugin.getMySQL().getRank(m.getId()) + "`", false)
+                                .addField(">>> Die Punkte", "Punkte: `" + Main.plugin.getMySQL().getPunkte(m.getUser().getId()) + "`", false)
+                                .addField(">>> Die gesendeten Nachrichten", "Nachrichten: `" + Main.plugin.getMySQL().getNachrichten(m.getId()) + "`", false)
+                                .addField(">>> Die hinzugefügten Reaktionen", "Reaktionen: `" + Main.plugin.getMySQL().getReaktionen(m.getId()) + "`", false)
+                                .addField(">>> Die Anzahl der gejointen Channels", "Joined: `" + Main.plugin.getMySQL().getJoinedChannels(m.getId()) + "`", false)
+                                .setThumbnail(m.getUser().getAvatarUrl())
+                                .setFooter("Bot created by Marius", m.getGuild().getIconUrl())
+                                .setColor(Color.decode("0x" + colour));
 
-                        channel.sendMessage(builder.build()).queue();
-                        builder.clear();
+                        channel.sendMessage(stats.build()).queue();
+                        stats.clear();
 
-                        isRunningOwnStats = false;
+                        isRunningStats = false;
                     }
                 }).start();
-
-            } else if(args.length == 2){
+            } else if(args.length >= 2){
 
                 Member targett = message.getMentionedMembers().get(0);
 
-                if(!targett.getId().equalsIgnoreCase("811985115306655774") && !targett.getId().equalsIgnoreCase("235088799074484224") && !targett.getId().equalsIgnoreCase("252128902418268161")) {
+                if(!(targett.getIdLong() == 844166843731279912L) && !(targett.getIdLong() == 235088799074484224L) && !(targett.getIdLong() == 252128902418268161L) && !(targett.getIdLong() == 811985115306655774L)){
 
-                    channel.purgeMessages(Utils.get(channel, amount));
+                    message.delete().queue();
                     channel.sendTyping().queue();
-
                     channel.sendMessage("Searching for Stats...").complete().delete().queueAfter(500, TimeUnit.MILLISECONDS);
 
                     isRunningOtherStats = !isRunningOtherStats;
                     new Thread(() -> {
                         while (isRunningOtherStats) {
+
                             try {
-                                Thread.sleep(150);
+                                Thread.sleep(250);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
 
-                            EmbedBuilder builder = new EmbedBuilder();
-                            builder.setTitle("◽ **Stats von " + targett.getUser().getName() + "** ◽");
-                            builder.setDescription("**Hier siehst die Stats**");
-                            builder.addField(">>> Der Rank", "Rank: `" + Main.plugin.getMySQL().getRank(targett.getUser().getId()) + "` ", false);
-                            builder.addField(">>> Die Punkte", "Punkte: `" + Main.plugin.getMySQL().getPunkte(targett.getUser().getId()) + "`", false);
-                            builder.addField(">>> Die gesendeten Nachrichten", "Nachrichten: `" + Main.plugin.getMySQL().getNachrichten(targett.getUser().getId()) + "`", false);
-                            builder.addField(">>> Die hinzugefügten Reaktionen", "Reaktionen: `" + Main.plugin.getMySQL().getReaktionen(targett.getUser().getId()) + "`", false);
-                            builder.setThumbnail(targett.getUser().getAvatarUrl());
-                            builder.setFooter("Bot created by Marius", m.getGuild().getIconUrl());
-                            //COLOUR
                             Random rand = new Random();
                             int i = rand.nextInt(colours.length);
                             String colour = colours[i];
-                            builder.setColor(Color.decode("0x" + colour));
 
-                            channel.sendMessage(builder.build()).queue();
-                            builder.clear();
+                            stats = new EmbedBuilder()
+                                    .setTitle("◽ **Stats von " + targett.getUser().getName() + "** ◽")
+                                    .setDescription("**Hier siehst du die Stats von " + targett.getUser().getName() + "**")
+                                    .addField(">>> Der Rank", "Rank: `" + Main.plugin.getMySQL().getRank(targett.getId()) + "`", false)
+                                    .addField(">>> Die Punkte", "Punkte: `" + Main.plugin.getMySQL().getPunkte(targett.getUser().getId()) + "`", false)
+                                    .addField(">>> Die gesendeten Nachrichten", "Nachrichten: `" + Main.plugin.getMySQL().getNachrichten(targett.getId()) + "`", false)
+                                    .addField(">>> Die hinzugefügten Reaktionen", "Reaktionen: `" + Main.plugin.getMySQL().getReaktionen(targett.getId()) + "`", false)
+                                    .addField(">>> Die Anzahl der gejointen Channels", "Joined: `" + Main.plugin.getMySQL().getJoinedChannels(targett.getId()) + "`", false)
+                                    .setThumbnail(targett.getUser().getAvatarUrl())
+                                    .setFooter("Bot created by Marius", m.getGuild().getIconUrl())
+                                    .setColor(Color.decode("0x" + colour));
+
+                            channel.sendMessage(stats.build()).queue();
+                            stats.clear();
 
                             isRunningOtherStats = false;
                         }
                     }).start();
-                }else {
-                    channel.purgeMessages(Utils.get(channel, amount));
-                    channel.sendMessage("Diese Stats sind verborgen :D").complete().delete().queueAfter(5, TimeUnit.SECONDS);
+
+
+                } else {
+                    message.delete().queue();
+                    channel.sendMessage("Keine Statistiken vorhanden!").complete().delete().queueAfter(5, TimeUnit.SECONDS);
                 }
-            }else {
-                channel.purgeMessages(Utils.get(channel, amount));
-                channel.sendMessage("Benutze: #stats <Person>").complete().delete().queueAfter(5, TimeUnit.SECONDS);
+            } else {
+                message.delete().queue();
+                channel.sendMessage("Benutze #stats @User").complete().delete().queueAfter(5, TimeUnit.SECONDS);
+
             }
         } else {
             channel.purgeMessages(Utils.get(channel, amount));

@@ -66,6 +66,7 @@ public class Main {
         builder.addEventListeners(new GuildMemberLeave());
         builder.addEventListeners(new SendMessageListener());
         builder.addEventListeners(new ReactionsListener());
+        builder.addEventListeners(new JoinLeaveListener(this));
         //builder.addEventListeners(new ChannelJoinEvent());
         //builder.addEventListeners(new ChannelLeaveEvent());
         //builder.addEventListeners(new BlackListListener());

@@ -87,22 +87,22 @@ public class OdetAmoCommand implements ServerCommand {
                                     } else {
                                         //RANK 5
                                         if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 10000){
-                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0);
+                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0, 0);
                                             //RANK 4
                                         } else if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 1000){
-                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0);
+                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0, 0);
                                             //RANK 3
                                         } else if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 500){
-                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0);
+                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0, 0);
                                             //RANK 2
                                         } else if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 100){
-                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0);
+                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0, 0);
                                             //RANK 1
                                         } else if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 50){
-                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0);
+                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0, 0);
                                             //UNRANKED
                                         } else if(Main.plugin.getMySQL().getPunkte(m.getId()) < 50) {
-                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0);
+                                            Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 1, 0, 0, 0);
                                         }
 
                                         cooldown.put(m, System.currentTimeMillis() + (10 * 60 * 1000));

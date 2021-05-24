@@ -79,7 +79,13 @@ public class MySQL {
         }
     }
 
-    public void createNewPlayer(String userID, String userName, int punkte, int messages, int reactions, int channeltime){
+    /*
+    *
+    * Channeltime not available
+    *
+    * */
+
+    public void createNewPlayer(String userID, String userName, int punkte, int messages, int reactions, int joinedchannel){
 
         isRunningCreateNewPlayer = !isRunningCreateNewPlayer;
 
@@ -96,13 +102,13 @@ public class MySQL {
                         return;
 
                 try {
-                    PreparedStatement ps = con.prepareStatement("INSERT INTO ranking (UserID,Username,Punkte,Nachrichten,Reaktionen,ChannelTime) VALUES (?,?,?,?,?,?)");
+                    PreparedStatement ps = con.prepareStatement("INSERT INTO ranking (UserID,Username,Punkte,Nachrichten,Reaktionen,JoinedChannel) VALUES (?,?,?,?,?,?)");
                     ps.setString(1, userID);
                     ps.setString(2, userName);
                     ps.setInt(3, punkte);
                     ps.setInt(4, messages);
                     ps.setInt(5, reactions);
-                    ps.setInt(6, 0);
+                    ps.setInt(6, joinedchannel);
                     ps.executeUpdate();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
@@ -113,7 +119,7 @@ public class MySQL {
         }).start();
     }
 
-    public void setPunkte(String userID, String username, int punkte, int nachrichten, int reaktionen){
+    public void setPunkte(String userID, String username, int punkte, int nachrichten, int reaktionen, int joinedChannels){
 
         isRunningUpdatePlayer = !isRunningUpdatePlayer;
 
@@ -130,12 +136,13 @@ public class MySQL {
                         return;
 
                 try {
-                    PreparedStatement ps = con.prepareStatement("UPDATE ranking SET Username = ?, Punkte = ?, Nachrichten = ?, Reaktionen = ? WHERE UserID = ?");
+                    PreparedStatement ps = con.prepareStatement("UPDATE ranking SET Username = ?, Punkte = ?, Nachrichten = ?, Reaktionen = ?, JoinedChannel = ? WHERE UserID = ?");
                     ps.setString(1, username);
                     ps.setInt(2, getPunkte(userID)+punkte);
                     ps.setInt(3, getNachrichten(userID)+nachrichten);
                     ps.setInt(4, getReaktionen(userID)+reaktionen);
-                    ps.setString(5, userID);
+                    ps.setInt(5, getJoinedChannels(userID)+joinedChannels);
+                    ps.setString(6, userID);
                     ps.executeUpdate();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
@@ -302,5 +309,22 @@ public class MySQL {
         }
 
         return false;
+    }
+
+    public int getJoinedChannels(String UserID) {
+        if(!isConnected())
+            if(!connect())
+                return 0;
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT JoinedChannel FROM ranking WHERE UserID = ?");
+            ps.setString(1, UserID);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+                return rs.getInt("JoinedChannel");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return 0;
     }
 }
