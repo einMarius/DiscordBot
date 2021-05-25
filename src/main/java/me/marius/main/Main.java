@@ -25,7 +25,7 @@ public class Main {
 
     public static Main plugin;
     public static ShardManager shardManager;
-    public static String token = "ODExOTg1MTE1MzA2NjU1Nzc0.YC6KEQ.PwY-kja5bZ79UEwBS2C0s31Bzf0";
+    public static String token = "TOKEN";
     public static AudioPlayerManager audioplayermanager;
 
     private PlayerManager playerManager;
