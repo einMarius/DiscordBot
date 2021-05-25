@@ -5,12 +5,14 @@ import me.marius.music.PlayerManager;
 import me.marius.mysql.MySQL;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.security.auth.login.LoginException;
@@ -23,7 +25,7 @@ public class Main {
 
     public static Main plugin;
     public static ShardManager shardManager;
-    public static String token = "TOKEN";
+    public static String token = "ODExOTg1MTE1MzA2NjU1Nzc0.YC6KEQ.PwY-kja5bZ79UEwBS2C0s31Bzf0";
     public static AudioPlayerManager audioplayermanager;
 
     private PlayerManager playerManager;
@@ -43,6 +45,10 @@ public class Main {
         plugin.mySQL.connect();
         plugin.mySQL.createTables();
     }
+
+    //InChannelPoints
+    private Thread points;
+    public static ArrayList<Member> invoicechannel = new ArrayList<>();
 
     @SuppressWarnings("deprecation")
     public Main() throws LoginException {
@@ -163,5 +169,28 @@ public class Main {
     public PlayerManager getPlayerManager() { return playerManager; }
     public MySQL getMySQL() { return mySQL; }
     public Main getPlugin(){ return  this; }
+
+    public void runAddVoiceChannelPoints(Member m) {
+        this.points = new Thread(() -> {
+            long time = System.currentTimeMillis();
+            while (true) {
+                if (System.currentTimeMillis() >= time + 1000 * 60) {
+                    time = System.currentTimeMillis();
+
+                    if(invoicechannel.contains(m)) {
+                        if (!mySQL.userIsExisting(m.getId())) {
+                            mySQL.createNewPlayer(m.getId(), m.getUser().getName(), 0, 0, 0, 1, 0);
+                            System.out.println(m.getUser().getName() + " war eine Minute im Channel!");
+                        } else {
+                            mySQL.setPunkte(m.getId(), m.getUser().getName(), 0, 0, 0, 1, 0);
+                            System.out.println(m.getUser().getName() + " war eine Minute im Channel!");
+                        }
+                    }
+                }
+            }
+        });
+        this.points.setName("AddVoiceChannelPoints");
+        this.points.start();
+    }
 
 }

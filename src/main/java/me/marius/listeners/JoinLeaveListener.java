@@ -5,6 +5,7 @@ import me.marius.main.Main;
 import me.marius.mysql.MySQL;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -20,34 +21,39 @@ public class JoinLeaveListener extends ListenerAdapter {
     @Override
     public void onGuildVoiceJoin(GuildVoiceJoinEvent e){
 
+        Main.invoicechannel.add(e.getMember());
+
         if (cooldown.containsKey(e.getEntity())) {
             long secondsleft = ((cooldown.get(e.getEntity()) / 1000) + 10*60) - (System.currentTimeMillis() / 1000);
             if (secondsleft > 0) {
                 System.out.println(e.getEntity().getUser().getName() + " hat einen Channel betreten, obwohl der Cooldown für ihn noch aktiviert ist! (Keine zusätzlichen Punkte)");
-                Main.plugin.getMySQL().setPunkte(e.getEntity().getId(), e.getEntity().getUser().getName(), 0, 0, 0, 1);
+                Main.plugin.getMySQL().setPunkte(e.getEntity().getId(), e.getEntity().getUser().getName(), 0, 0, 0, 0, 1);
                 return;
             } else {
                 if (!Main.plugin.getMySQL().userIsExisting(e.getEntity().getId())) {
-                    Main.plugin.getMySQL().createNewPlayer(e.getEntity().getId(), e.getEntity().getUser().getName(), 1, 0, 0, 1);
+                    Main.plugin.getMySQL().createNewPlayer(e.getEntity().getId(), e.getEntity().getUser().getName(), 1, 0, 0, 0, 1);
                     e.getEntity().getGuild().addRoleToMember(e.getEntity().getId(), e.getEntity().getJDA().getRoleById(824983261197500440L)).queue();
                     cooldown.put(e.getEntity(), System.currentTimeMillis());
                 } else {
-                    Main.plugin.getMySQL().setPunkte(e.getEntity().getId(), e.getEntity().getUser().getName(), 1, 0, 0, 1);
+                    Main.plugin.getMySQL().setPunkte(e.getEntity().getId(), e.getEntity().getUser().getName(), 1, 0, 0, 0, 1);
                     cooldown.put(e.getEntity(), System.currentTimeMillis());
                     LevelRoles.addRoles(e.getEntity());
                 }
             }
         } else {
             if (!Main.plugin.getMySQL().userIsExisting(e.getEntity().getId())) {
-                Main.plugin.getMySQL().createNewPlayer(e.getEntity().getId(), e.getEntity().getUser().getName(), 1, 0, 0, 1);
+                Main.plugin.getMySQL().createNewPlayer(e.getEntity().getId(), e.getEntity().getUser().getName(), 1, 0, 0, 0, 1);
                 e.getEntity().getGuild().addRoleToMember(e.getEntity().getId(), e.getEntity().getJDA().getRoleById(824983261197500440L)).queue();
                 cooldown.put(e.getEntity(), System.currentTimeMillis());
             } else {
-                Main.plugin.getMySQL().setPunkte(e.getEntity().getId(), e.getEntity().getUser().getName(), 1, 0, 0, 1);
+                Main.plugin.getMySQL().setPunkte(e.getEntity().getId(), e.getEntity().getUser().getName(), 1, 0, 0, 0, 1);
                 cooldown.put(e.getEntity(), System.currentTimeMillis());
                 LevelRoles.addRoles(e.getEntity());
             }
         }
+
+        plugin.runAddVoiceChannelPoints(e.getMember());
+
     }
 
     @Override
@@ -57,30 +63,37 @@ public class JoinLeaveListener extends ListenerAdapter {
             long secondsleft = ((cooldown.get(e.getEntity()) / 1000) + 10*60) - (System.currentTimeMillis() / 1000);
             if (secondsleft > 0) {
                 System.out.println(e.getEntity().getUser().getName() + " hat einen Channel gewechselt, obwohl der Cooldown für ihn noch aktiviert ist! (Keine zusätzlichen Punkte)");
-                Main.plugin.getMySQL().setPunkte(e.getEntity().getId(), e.getEntity().getUser().getName(), 0, 0, 0, 1);
+                Main.plugin.getMySQL().setPunkte(e.getEntity().getId(), e.getEntity().getUser().getName(), 0, 0, 0, 0, 1);
                 return;
             } else {
                 if (!Main.plugin.getMySQL().userIsExisting(e.getEntity().getId())) {
-                    Main.plugin.getMySQL().createNewPlayer(e.getEntity().getId(), e.getEntity().getUser().getName(), 1, 0, 0, 1);
+                    Main.plugin.getMySQL().createNewPlayer(e.getEntity().getId(), e.getEntity().getUser().getName(), 1, 0, 0, 0, 1);
                     e.getEntity().getGuild().addRoleToMember(e.getEntity().getId(), e.getEntity().getJDA().getRoleById(824983261197500440L)).queue();
                     cooldown.put(e.getEntity(), System.currentTimeMillis());
                 } else {
-                    Main.plugin.getMySQL().setPunkte(e.getEntity().getId(), e.getEntity().getUser().getName(), 1, 0, 0, 1);
+                    Main.plugin.getMySQL().setPunkte(e.getEntity().getId(), e.getEntity().getUser().getName(), 1, 0, 0, 0, 1);
                     cooldown.put(e.getEntity(), System.currentTimeMillis());
                     LevelRoles.addRoles(e.getEntity());
                 }
             }
         } else {
             if (!Main.plugin.getMySQL().userIsExisting(e.getEntity().getId())) {
-                Main.plugin.getMySQL().createNewPlayer(e.getEntity().getId(), e.getEntity().getUser().getName(), 1, 0, 0, 1);
+                Main.plugin.getMySQL().createNewPlayer(e.getEntity().getId(), e.getEntity().getUser().getName(), 1, 0, 0, 0, 1);
                 e.getEntity().getGuild().addRoleToMember(e.getEntity().getId(), e.getEntity().getJDA().getRoleById(824983261197500440L)).queue();
                 cooldown.put(e.getEntity(), System.currentTimeMillis());
             } else {
-                Main.plugin.getMySQL().setPunkte(e.getEntity().getId(), e.getEntity().getUser().getName(), 1, 0, 0, 1);
+                Main.plugin.getMySQL().setPunkte(e.getEntity().getId(), e.getEntity().getUser().getName(), 1, 0, 0, 0, 1);
                 cooldown.put(e.getEntity(), System.currentTimeMillis());
                 LevelRoles.addRoles(e.getEntity());
             }
         }
+    }
+
+    @Override
+    public void onGuildVoiceLeave(GuildVoiceLeaveEvent e){
+
+        Main.invoicechannel.remove(e.getMember());
+
     }
 
 }

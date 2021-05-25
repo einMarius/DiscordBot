@@ -85,7 +85,7 @@ public class MySQL {
     *
     * */
 
-    public void createNewPlayer(String userID, String userName, int punkte, int messages, int reactions, int joinedchannel){
+    public void createNewPlayer(String userID, String userName, int punkte, int messages, int reactions, int channeltime, int joinedchannel){
 
         isRunningCreateNewPlayer = !isRunningCreateNewPlayer;
 
@@ -102,13 +102,14 @@ public class MySQL {
                         return;
 
                 try {
-                    PreparedStatement ps = con.prepareStatement("INSERT INTO ranking (UserID,Username,Punkte,Nachrichten,Reaktionen,JoinedChannel) VALUES (?,?,?,?,?,?)");
+                    PreparedStatement ps = con.prepareStatement("INSERT INTO ranking (UserID,Username,Punkte,Nachrichten,Reaktionen,ChannelTime,JoinedChannel) VALUES (?,?,?,?,?,?,?)");
                     ps.setString(1, userID);
                     ps.setString(2, userName);
                     ps.setInt(3, punkte);
                     ps.setInt(4, messages);
                     ps.setInt(5, reactions);
-                    ps.setInt(6, joinedchannel);
+                    ps.setInt(7, joinedchannel);
+                    ps.setInt(6, channeltime);
                     ps.executeUpdate();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
@@ -119,7 +120,7 @@ public class MySQL {
         }).start();
     }
 
-    public void setPunkte(String userID, String username, int punkte, int nachrichten, int reaktionen, int joinedChannels){
+    public void setPunkte(String userID, String username, int punkte, int nachrichten, int reaktionen, int channeltime, int joinedChannels){
 
         isRunningUpdatePlayer = !isRunningUpdatePlayer;
 
@@ -136,13 +137,14 @@ public class MySQL {
                         return;
 
                 try {
-                    PreparedStatement ps = con.prepareStatement("UPDATE ranking SET Username = ?, Punkte = ?, Nachrichten = ?, Reaktionen = ?, JoinedChannel = ? WHERE UserID = ?");
+                    PreparedStatement ps = con.prepareStatement("UPDATE ranking SET Username = ?, Punkte = ?, Nachrichten = ?, Reaktionen = ?, ChannelTime = ?, JoinedChannel = ? WHERE UserID = ?");
                     ps.setString(1, username);
                     ps.setInt(2, getPunkte(userID)+punkte);
                     ps.setInt(3, getNachrichten(userID)+nachrichten);
                     ps.setInt(4, getReaktionen(userID)+reaktionen);
-                    ps.setInt(5, getJoinedChannels(userID)+joinedChannels);
-                    ps.setString(6, userID);
+                    ps.setInt(6, getJoinedChannels(userID)+joinedChannels);
+                    ps.setInt(5, getChannelTime(userID)+channeltime);
+                    ps.setString(7, userID);
                     ps.executeUpdate();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
@@ -180,19 +182,6 @@ public class MySQL {
             }
         }).start();
 
-    }
-
-    public int getChannelTime(String userID){
-        try {
-            PreparedStatement ps = con.prepareStatement("SELECT ChannelTime FROM ranking WHERE UserID = ?");
-            ps.setString(1, userID);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next())
-                return rs.getInt("ChannelTime");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return 0;
     }
 
     public int getReaktionen(String userID){
@@ -325,6 +314,24 @@ public class MySQL {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        return 0;
+    }
+
+    public int getChannelTime(String UserID) {
+        if(!isConnected())
+            if(!connect())
+                return 0;
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT ChannelTime FROM ranking WHERE UserID = ?");
+            ps.setString(1, UserID);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+                return rs.getInt("ChannelTime");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
         return 0;
     }
 }

@@ -40,7 +40,7 @@ public class ChannelJoinEvent extends ListenerAdapter {
 
                             //nach 1 Minute hinzufügen!
                             if (!Main.plugin.getMySQL().userIsExisting(e.getMember().getId())) {
-                                Main.plugin.getMySQL().createNewPlayer(e.getMember().getUser().getId(), e.getMember().getUser().getName(), 0, 0, 0, 1);
+                                Main.plugin.getMySQL().createNewPlayer(e.getMember().getUser().getId(), e.getMember().getUser().getName(), 0, 0, 0, 0, 1);
                                 System.out.println(e.getMember().getUser().getName() + " hat +1 ChannelTime bekommen");
                             } else {
                                 Main.plugin.getMySQL().setChannelTime(e.getMember().getId(), e.getMember().getUser().getName(), 1);

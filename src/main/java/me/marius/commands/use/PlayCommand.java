@@ -91,27 +91,27 @@ public class PlayCommand implements ServerCommand {
 
                                 //MySQL
                                 if(!Main.plugin.getMySQL().userIsExisting(m.getUser().getId())) {
-                                    Main.plugin.getMySQL().createNewPlayer(m.getUser().getId(), m.getUser().getName(), 3, 0, 0, 0);
+                                    Main.plugin.getMySQL().createNewPlayer(m.getUser().getId(), m.getUser().getName(), 3, 0, 0, 0, 0);
                                     m.getGuild().addRoleToMember(m.getId(), m.getJDA().getRoleById("824983261197500440")).queue();
                                 } else {
                                     //RANK 5
                                     if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 10000){
-                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0, 0);
+                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0, 0, 0);
                                         //RANK 4
                                     } else if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 1000){
-                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0, 0);
+                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0, 0, 0);
                                         //RANK 3
                                     } else if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 500){
-                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0, 0);
+                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0, 0, 0);
                                         //RANK 2
                                     } else if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 100){
-                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0, 0);
+                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0, 0, 0);
                                         //RANK 1
                                     } else if(Main.plugin.getMySQL().getPunkte(m.getId()) >= 50){
-                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0, 0);
+                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0, 0, 0);
                                         //UNRANKED
                                     } else if(Main.plugin.getMySQL().getPunkte(m.getId()) < 50) {
-                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0, 0);
+                                        Main.plugin.getMySQL().setPunkte(m.getUser().getId(), m.getUser().getName(), 3, 0, 0, 0, 0);
                                     }
 
                                     LevelRoles.addRoles(m);
